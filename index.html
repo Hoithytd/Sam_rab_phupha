@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#d6b7b7">
+<title>Open Your Heart</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #a21f1f;
+  font-family: Arial, sans-serif;
+}
+
+#cover {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #fd95ad, #da7c7c 75%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  z-index: 2;
+}
+
+#heart {
+  border: none;
+  background: none;
+  color: #ff1744;
+  font-size: 130px;
+  cursor: pointer;
+  animation: beat 1s infinite;
+  filter: drop-shadow(0 0 25px #ff1744);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#heart:active {
+  transform: scale(.85);
+}
+
+#message {
+  color: white;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.18); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.12); }
+}
+
+#videoScreen {
+  position: fixed;
+  inset: 0;
+  background: #db9e9e;
+  display: none;
+  z-index: 5;
+}
+
+#videoScreen video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+</style>
+</head>
+
+<body>
+
+<div id="cover">
+  <button id="heart" aria-label="เปิดวิดีโอ">❤️</button>
+  <div id="message">สำหรัยภูผา</div>
+</div>
+
+<div id="videoScreen">
+  <video id="scaryVideo" playsinline loop>
+    <source src="./scary.mp4" type="video/mp4">
+  </video>
+</div>
+
+<script>
+const heart = document.getElementById("heart");
+const cover = document.getElementById("cover");
+const screen = document.getElementById("videoScreen");
+const video = document.getElementById("scaryVideo");
+
+heart.addEventListener("click", async () => {
+  cover.style.display = "none";
+  screen.style.display = "block";
+
+  video.muted = false;
+  video.volume = 1;
+
+  try {
+    await video.play();
+  } catch (error) {
+    screen.innerHTML =
+      '<div style="color:white;text-align:center;padding:30px">เล่นวิดีโอไม่ได้ กรุณาตรวจสอบไฟล์ scary.mp4</div>';
+    return;
+  }
+
+  try {
+    await screen.requestFullscreen();
+  } catch (error) {
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch (e) {}
+  }
+});
+</script>
+
+</body>
+</html>
